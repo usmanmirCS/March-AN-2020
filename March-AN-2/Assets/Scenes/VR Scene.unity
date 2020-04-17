@@ -204,6 +204,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_moveSpeed: 2
   m_turnSpeed: 5
+--- !u!114 &11635616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 11635613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31f6512e59dd1da4c92cd7bb3dbb225f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_prefabFireball: {fileID: 2197790942556882804, guid: c1dc12c59ad22ec45956bd2df7fb9578,
+    type: 3}
+  m_shootForce: 250
 --- !u!1 &1052000182
 GameObject:
   m_ObjectHideFlags: 0
