@@ -3,40 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
-public class SimTeleport : MonoBehaviour
+public class VRTeleport : MonoBehaviour
 {
-    private LineRenderer m_line;
-    private bool m_teleportValid;
-    private RaycastHit m_hit;
+    public Transform m_vRRig;
+    public string m_buttonName;
 
-    private void Start()
+    private LineRenderer m_line;
+    private RaycastHit m_hit;
+    private bool m_teleportValid;
+    // Start is called before the first frame update
+    void Start()
     {
         m_line = GetComponent<LineRenderer>();
+        m_line.enabled = false;
     }
 
-    private void Update()
+    // Update is called once per frame
+    void Update()
     {
-        if(Input.GetKey(KeyCode.T))
+        if(Input.GetButton(m_buttonName))
         {
             if(Physics.Raycast(transform.position, transform.forward, out m_hit))
             {
+                m_teleportValid = true;
                 m_line.enabled = true;
                 m_line.SetPosition(0, transform.position);
                 m_line.SetPosition(1, m_hit.point);
-                m_teleportValid = true;
             }
             else
             {
-                m_line.enabled = false;
                 m_teleportValid = false;
+                m_line.enabled = false;
             }
         }
-        else if(Input.GetKeyUp(KeyCode.T))
+        else if(Input.GetButtonUp(m_buttonName))
         {
             m_line.enabled = false;
             if(m_teleportValid)
             {
-                transform.position = m_hit.point;
+                m_vRRig.position = m_hit.point;
             }
         }
     }
