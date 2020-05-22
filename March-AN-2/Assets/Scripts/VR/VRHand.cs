@@ -5,9 +5,13 @@ using UnityEngine;
 public class VRHand : MonoBehaviour
 {
     public Animator m_anim;
-    public string m_gripName;
 
+    public string m_gripName;
     private bool m_gripHeld;
+
+    public string m_triggerName;
+    private bool m_triggerHeld;
+
     private GameObject m_touchingObject;
     private GameObject m_heldObject;
 
@@ -42,6 +46,23 @@ public class VRHand : MonoBehaviour
             if(m_heldObject)
             {
                 Release();
+            }
+        }
+
+        if(Input.GetAxis(m_triggerName) > 0.8f && !m_triggerHeld)
+        {
+            m_triggerHeld = true;
+            if(m_heldObject)
+            {
+                m_heldObject.SendMessage("TriggerDown");
+            }
+        }
+        else if(Input.GetAxis(m_triggerName) < 0.8f && m_triggerHeld)
+        {
+            m_triggerHeld = false;
+            if(m_heldObject)
+            {
+                m_heldObject.SendMessage("TriggerUp");
             }
         }
     }
