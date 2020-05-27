@@ -42,6 +42,7 @@ public class SimGrab : MonoBehaviour
             m_anim.SetBool("isGrabbing", false);
             if(m_heldObject)
             {
+                m_heldObject.SendMessage("GrabReleased");
                 Release();
             }
         }
@@ -61,6 +62,13 @@ public class SimGrab : MonoBehaviour
             }
         }
 
+        if(Input.GetKeyDown(KeyCode.Mouse2))
+        {
+            if(m_heldObject)
+            {
+                m_heldObject.SendMessage("MenuDown");
+            }
+        }
     }
 
     void Grab()

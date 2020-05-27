@@ -8,12 +8,30 @@ public class BitGun : MonoBehaviour
     public Transform m_spawn;
     public float m_shootForce;
 
+    private Coroutine m_shootCoroutine;
+
     void TriggerDown()
     {
-        GameObject bit = Instantiate(m_prefabBit, m_spawn.position, m_spawn.rotation);
+        m_shootCoroutine = StartCoroutine(SpamShoot());
+    }
 
-        bit.GetComponent<Rigidbody>().AddForce(m_spawn.forward * m_shootForce);
+    void TriggerUp()
+    {
+        StopCoroutine(m_shootCoroutine);
+    }
 
-        Destroy(bit, 5f);
+    IEnumerator SpamShoot()
+    {
+        while(true)
+        {
+            GameObject bit = Instantiate(m_prefabBit, m_spawn.position, m_spawn.rotation);
+
+            bit.GetComponent<Rigidbody>().AddForce(m_spawn.forward * m_shootForce);
+
+            Destroy(bit, 5f);
+
+            yield return new WaitForSeconds(0.25f);
+        }
+
     }
 }

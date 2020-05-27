@@ -12,6 +12,8 @@ public class VRHand : MonoBehaviour
     public string m_triggerName;
     private bool m_triggerHeld;
 
+    public string m_menuButtonName;
+
     private GameObject m_touchingObject;
     private GameObject m_heldObject;
 
@@ -45,6 +47,7 @@ public class VRHand : MonoBehaviour
             m_anim.SetBool("isGrabbing", false);
             if(m_heldObject)
             {
+                m_heldObject.SendMessage("GrabReleased");
                 Release();
             }
         }
@@ -63,6 +66,14 @@ public class VRHand : MonoBehaviour
             if(m_heldObject)
             {
                 m_heldObject.SendMessage("TriggerUp");
+            }
+        }
+
+        if(Input.GetButtonDown(m_menuButtonName))
+        {
+            if(m_heldObject)
+            {
+                m_heldObject.SendMessage("MenuDown");
             }
         }
     }
