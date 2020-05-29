@@ -14,6 +14,12 @@ public class VRHand : MonoBehaviour
 
     public string m_menuButtonName;
 
+    private Vector3 m_handVelocity;
+    private Vector3 m_oldPosition;
+
+    private Vector3 m_handAngularVelocity;
+    private Vector3 m_oldEulerAngles;
+
     private GameObject m_touchingObject;
     private GameObject m_heldObject;
 
@@ -32,6 +38,14 @@ public class VRHand : MonoBehaviour
 
     void Update()
     {
+        Vector3 tp = transform.position;
+        m_handVelocity = tp - m_oldPosition;
+        m_oldPosition = tp;
+
+        Vector3 te = transform.eulerAngles;
+        m_handAngularVelocity = te - m_oldEulerAngles;
+        m_oldEulerAngles = te;
+
         if(Input.GetAxis(m_gripName) > 0.5f && !m_gripHeld)
         {
             m_gripHeld = true;
@@ -81,13 +95,32 @@ public class VRHand : MonoBehaviour
     void Grab()
     {
         m_heldObject = m_touchingObject;
-        m_heldObject.GetComponent<Rigidbody>().isKinematic = true;
+        //m_heldObject.GetComponent<Rigidbody>().isKinematic = true;
+
+        FixedJoint fx = gameObject.AddComponent<FixedJoint>();
+        fx.connectedBody = m_heldObject.GetComponent<Rigidbody>();
+        fx.breakForce = 5000;
+        fx.breakTorque = 5000;
+
         m_heldObject.transform.SetParent(transform);
     }
 
     void Release()
     {
-        m_heldObject.GetComponent<Rigidbody>().isKinematic = false;
+        //m_heldObject.GetComponent<Rigidbody>().isKinematic = false;
+        Destroy(GetComponent<FixedJoint>());
+        m_heldObject.transform.SetParent(null);
+
+        Rigidbody rb = m_heldObject.GetComponent<Rigidbody>();
+        rb.velocity = m_handVelocity * 60 / rb.mass;
+        rb.angularVelocity = m_handAngularVelocity * 60 / rb.mass;
+
+        m_heldObject = null;
+    }
+
+    private void OnJointBreak(float breakForce)
+    {
+        m_heldObject.SendMessage("GrabReleased");
         m_heldObject.transform.SetParent(null);
         m_heldObject = null;
     }
